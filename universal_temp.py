@@ -25,12 +25,31 @@ def theform():
 def process():
     latitude = request.form['latitude']
     longitude = request.form['longitude']
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?lat='+latitude+'&lon='+longitude+'&appid=01b63eabf678d6725a9a05243d469b2b')
+
+    r = requests.get(f"https://api.weather.gov/points/{latitude},{longitude}")
     json_object = r.json()
-    temp_k = float(json_object['main']['temp'])
-    temp_f = (temp_k - 273.15) * 1.8 + 32
+
+
+    Location = json_object['properties']['relativeLocation']['properties']['city']
+    Link = json_object['properties']['forecast']
+    
+
+    r = requests.get(Link)
+    json_object = r.json()
+    json_object['properties']['periods']
+    var = 'Tonight'
+
+    for i in json_object['properties']['periods']:
+        for key, value in i.items():
+
+            if key == 'name' and value == var:
+                j = i
+                break
+
+    temp_f = float(j['temperature'])
     temp_c = int((temp_f - 32 ) * 5 / 9)
-    Location = json_object['name']
+
+
     return '<h1>Hello  the {} temperature is {} Celsius <h1>'.format(Location, temp_c)
 
 
